@@ -59,6 +59,14 @@ Options:
 - `logger` Object (optional) - A custom logger object that defines a `log` function. Defaults to `console`. See [electron-log](https://github.com/megahertz/electron-log), a module that aggregates logs from main and renderer processes into a single file.
 - `notifyUser` Boolean (optional) - Defaults to `true`.  When enabled the user will be
   prompted to apply the update immediately after download.
+- `startChecksOnInit` Boolean (optional) - Defaults to `true`.  When enabled a check will be run on init, and checks will run every interval and can't be stopped. If you require manual control over start/stop, disable this option, and do this instead:
+  ```js
+  const updater = require('update-electron-app')({ startChecksOnInit: false })
+  let intervalId = updater.startChecks() // checks every interval
+  updater.stopChecks(intervalId)
+  updater.check() // one-off check
+  intervalId = updater.startChecks()
+  ```
 
 ## FAQ
 

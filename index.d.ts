@@ -32,11 +32,23 @@ declare namespace updateElectronApp {
      *                             prompted to apply the update immediately after download.
      */
     readonly notifyUser?: boolean;
+    /**
+     * @param {Boolean} startChecksOnInit Defaults to `true`.  When disabled no checks will run until
+     *                                    you manually make start and stop calls using check or startAutoChecks
+     */
+    readonly startChecksOnInit?: boolean;
+  }
+
+  export interface IUpdater<L = ILogger> {
+    check: () => void;
+    startChecks: () => ReturnType<typeof setInterval>;
+    stopChecks: () => void;
+    readonly opts: updateElectronApp.IUpdateElectronAppOptions<L>;
   }
 }
 
 declare function updater<L = updateElectronApp.ILogger>(
   opts?: updateElectronApp.IUpdateElectronAppOptions<L>
-): void;
+): void | updateElectronApp.IUpdater<L>;
 
 export = updater

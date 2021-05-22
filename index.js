@@ -88,9 +88,21 @@ function initUpdater (opts) {
     })
   }
 
-  // check for updates right away and keep checking later
-  autoUpdater.checkForUpdates()
-  setInterval(() => { autoUpdater.checkForUpdates() }, ms(updateInterval))
+  const updater = {
+    check: () => { autoUpdater.checkForUpdates() },
+    startChecks: () => {
+      return setInterval(() => { autoUpdater.checkForUpdates() }, ms(updateInterval))
+    },
+    stopChecks: (intervalId) => { intervalId && clearInterval(intervalId) }
+  }
+
+  if (opts.startChecksOnInit) {
+    // check for updates right away and keep checking later
+    updater.check()
+    updater.startChecks()
+  }
+
+  return updater
 }
 
 function validateInput (opts) {
@@ -98,9 +110,10 @@ function validateInput (opts) {
     host: 'https://update.electronjs.org',
     updateInterval: '10 minutes',
     logger: console,
-    notifyUser: true
+    notifyUser: true,
+    startChecksOnInit: true
   }
-  const { host, updateInterval, logger, notifyUser } = Object.assign({}, defaults, opts)
+  const { host, updateInterval, logger, notifyUser, startChecksOnInit } = Object.assign({}, defaults, opts)
 
   // allows electron to be mocked in tests
   const electron = opts.electron || require('electron')
@@ -143,5 +156,5 @@ function validateInput (opts) {
     'function'
   )
 
-  return { host, repo, updateInterval, logger, electron, notifyUser }
+  return { host, repo, updateInterval, logger, electron, notifyUser, startChecksOnInit }
 }

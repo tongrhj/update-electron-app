@@ -1,7 +1,4 @@
-import { expectType } from 'tsd'
-import updater = require('../')
-
-expectType<void>(updater())
+import updater from '../'
 
 interface ICustomLogger {
   log(message: string, ...args: string[]): void;
@@ -19,6 +16,7 @@ updater<ICustomLogger>({
   notifyUser: true,
   repo: "HashimotoYT/hab",
   updateInterval: "10 minutes",
+  startChecksOnInit: true
 });
 
 updater()
